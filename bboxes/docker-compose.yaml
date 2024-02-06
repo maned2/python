@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+  bboxes:
+    build: .
+    command: 'python3 main.py'
+    volumes:
+      - .:/usr/src/app
+
