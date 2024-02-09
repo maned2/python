@@ -3,25 +3,31 @@ import cv2
 import matplotlib.pyplot as plt
 
 
-def get_dominant_colors(img):
+def get_dominant_color(img):
     # print(type(img))
     # height, width, channels = img.shape
     # print(height, width, channels)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     # img = img_bgr[:, :, [2, 1, 0]]
     pixels = np.float32(img.reshape(-1, 3))
-    n_colors = 5
-    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 200, .1)
+    n_colors = 8
+    criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1)
     flags = cv2.KMEANS_RANDOM_CENTERS
     _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
-    return palette
+    _, counts = np.unique(labels, return_counts=True)
+
+    # print('labels=', labels)
+    # print('palette=', palette)
+
+    dominant = palette[np.argmax(counts)]
+    return dominant
 
 
 def main():
-    img = cv2.imread('input/image.png')
-    colours = get_dominant_colors(img)
+    img = cv2.imread('output/3_c_58_50_37.jpg')
+    colours = get_dominant_color(img)
     print(colours)
-    exit(0)
+    # exit(0)
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     average = img.mean(axis=0).mean(axis=0)
@@ -36,7 +42,7 @@ def main():
     _, labels, palette = cv2.kmeans(pixels, n_colors, None, criteria, 10, flags)
     _, counts = np.unique(labels, return_counts=True)
 
-    print('labels=', labels)
+    # print('labels=', labels)
     print('palette=', palette)
     print('counts=', counts)
 
